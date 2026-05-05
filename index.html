@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Resume Builder | Modern & Professional</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Editor Panel -->
+        <aside class="editor-panel">
+            <div id="auth-status" class="auth-status-bar">
+                <span>Welcome!</span>
+                <button class="btn-auth-action" onclick="openAuthModal()">Sign In</button>
+            </div>
+            <div id="dashboard-link" style="display: none; margin-bottom: 1rem;">
+                <button class="btn-template" style="width: 100%;" onclick="openDashboard()">📂 My Saved Resumes</button>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                <button class="btn-download" style="flex: 1; padding: 0.5rem;" onclick="saveResume()">Save Draft</button>
+                <button class="btn-add" style="flex: 1; margin: 0; padding: 0.5rem;" onclick="newResume()">New +</button>
+            </div>
+            <h1>Elite Resume</h1>
+            
+            <section>
+                <div class="section-title">Personal Details</div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="fullName" placeholder="John Doe" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>Professional Title</label>
+                    <input type="text" id="title" placeholder="Software Engineer" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="john@example.com" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="text" id="phone" placeholder="+1 234 567 890" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" id="location" placeholder="New York, USA" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>Summary</label>
+                    <textarea id="summary" rows="4" placeholder="Briefly describe your career..." oninput="updatePreview()"></textarea>
+                </div>
+            </section>
+
+            <section>
+                <div class="section-title">Experience</div>
+                <div id="experience-list" class="dynamic-list">
+                    <!-- Dynamic items will be added here -->
+                </div>
+                <button class="btn-add" onclick="addItem('experience')">+ Add Experience</button>
+            </section>
+
+            <section>
+                <div class="section-title">Education</div>
+                <div id="education-list" class="dynamic-list">
+                    <!-- Dynamic items will be added here -->
+                </div>
+                <button class="btn-add" onclick="addItem('education')">+ Add Education</button>
+            </section>
+
+            <section>
+                <div class="section-title">Skills</div>
+                <div class="form-group">
+                    <label>Skills (comma separated)</label>
+                    <input type="text" id="skills" placeholder="JavaScript, React, Node.js" oninput="updatePreview()">
+                </div>
+            </section>
+        </aside>
+
+        <!-- Preview Panel -->
+        <main class="preview-panel">
+            <div class="controls">
+                <div class="template-selector">
+                    <span style="font-weight: 600; color: var(--text-muted); margin-right: 0.5rem; font-size: 0.8rem;">SELECT STYLE:</span>
+                    <button id="btn-modern" class="btn-template active" onclick="setTemplate('modern')">Attractive</button>
+                    <button id="btn-plane" class="btn-template" onclick="setTemplate('plane')">Classic</button>
+                </div>
+                <button class="btn-download" onclick="downloadPDF()">Download PDF</button>
+            </div>
+            
+            <div class="resume-container">
+                <div id="resume-preview">
+                    <!-- Resume content rendered here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="auth-title">Sign In to Download</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.9rem;">Please sign in or create an account to download your resume as a PDF.</p>
+            
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="auth-email" placeholder="you@example.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="auth-password" placeholder="••••••••">
+            </div>
+            
+            <button id="auth-submit-btn" class="btn-download" style="width: 100%; margin-top: 1rem;" onclick="handleAuth()">Sign In</button>
+            
+            <div style="margin-top: 1rem; text-align: center; font-size: 0.875rem;">
+                <span id="auth-toggle-text">Don't have an account?</span>
+                <a href="#" id="auth-toggle-link" onclick="toggleAuthMode()" style="color: var(--primary-color); font-weight: 600; text-decoration: none;">Sign Up</a>
+            </div>
+            
+            <button class="btn-remove" style="position: static; margin-top: 1rem; width: 100%; background: #f1f5f9; color: var(--text-muted);" onclick="closeAuthModal()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Dashboard Modal -->
+    <div id="dashboard-modal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2>My Saved Resumes</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.9rem;">Load or manage your previously saved resumes.</p>
+            
+            <div id="resumes-list" style="max-height: 400px; overflow-y: auto;">
+                <!-- Saved resumes will be listed here -->
+                <p style="text-align: center; color: var(--text-muted);">Loading your resumes...</p>
+            </div>
+            
+            <button class="btn-remove" style="position: static; margin-top: 1rem; width: 100%; background: #f1f5f9; color: var(--text-muted);" onclick="closeDashboard()">Close</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
