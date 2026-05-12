@@ -21,10 +21,27 @@
 
 body {
     background-color: var(--bg-color);
-    background-image: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+    background-image: radial-gradient(circle at 0% 0%, #e6f0ff 0%, #ffffff 100%);
     color: var(--text-main);
     line-height: 1.6;
     min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 
 .container {
@@ -152,13 +169,18 @@ input:focus, textarea:focus {
 }
 
 .controls {
-    background: var(--card-bg);
-    padding: 1rem;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 1rem 1.5rem;
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    box-shadow: 0 8px 32px rgba(0, 86, 179, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .template-selector {
@@ -182,7 +204,13 @@ input:focus, textarea:focus {
     background: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
-    box-shadow: 0 4px 6px rgba(0, 86, 179, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 86, 179, 0.3);
+    transform: translateY(-1px);
+}
+
+.btn-template:hover:not(.active) {
+    border-color: var(--primary-color);
+    background: var(--primary-light);
 }
 
 .btn-download {
