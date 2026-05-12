@@ -116,6 +116,9 @@ function setTemplate(template) {
     currentTemplate = template;
     document.getElementById('btn-modern').classList.toggle('active', template === 'modern');
     document.getElementById('btn-plane').classList.toggle('active', template === 'plane');
+    document.getElementById('btn-executive').classList.toggle('active', template === 'executive');
+    document.getElementById('btn-sleek').classList.toggle('active', template === 'sleek');
+    document.getElementById('btn-minimalist').classList.toggle('active', template === 'minimalist');
     updatePreview();
 }
 
@@ -133,10 +136,13 @@ function updatePreview() {
         education: educationItems
     };
 
-    if (currentTemplate === 'modern') {
-        renderModern(preview, data);
-    } else {
-        renderPlane(preview, data);
+    switch(currentTemplate) {
+        case 'modern': renderModern(preview, data); break;
+        case 'plane': renderPlane(preview, data); break;
+        case 'executive': renderExecutive(preview, data); break;
+        case 'sleek': renderSleek(preview, data); break;
+        case 'minimalist': renderMinimalist(preview, data); break;
+        default: renderModern(preview, data);
     }
     
     // Scale after rendering
@@ -219,6 +225,163 @@ function renderModern(container, data) {
                     <div class="modern-item-sub">${edu.school}</div>
                 </div>
             `).join('')}
+        </div>
+    `;
+}
+
+function renderExecutive(container, data) {
+    container.className = 'template-executive';
+    container.style.padding = '0';
+    container.innerHTML = `
+        <div class="executive-header">
+            <h2>${data.name}</h2>
+            <div class="title">${data.title}</div>
+            <div style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.9;">
+                ${data.email} • ${data.phone} • ${data.location}
+            </div>
+        </div>
+        <div class="executive-content">
+            <div class="main-col">
+                <div class="executive-section-title">Profile</div>
+                <p style="font-size: 0.95rem; margin-bottom: 2rem;">${data.summary}</p>
+
+                <div class="executive-section-title">Experience</div>
+                ${data.experience.map(exp => `
+                    <div style="margin-bottom: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; font-weight: 700;">
+                            <span>${exp.role}</span>
+                            <span style="color: #64748b;">${exp.duration}</span>
+                        </div>
+                        <div style="color: #0f172a; font-weight: 600; font-size: 0.9rem;">${exp.company}</div>
+                        <p style="font-size: 0.9rem; margin-top: 0.25rem;">${exp.description}</p>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="side-col">
+                <div class="executive-sidebar">
+                    <div class="executive-section-title" style="margin-top: 0;">Education</div>
+                    ${data.education.map(edu => `
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 700; font-size: 0.9rem;">${edu.degree}</div>
+                            <div style="font-size: 0.85rem;">${edu.school}</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">${edu.duration}</div>
+                        </div>
+                    `).join('')}
+
+                    <div class="executive-section-title">Expertise</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                        ${data.skills.map(s => `<span style="background: white; border: 1px solid #e2e8f0; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">${s}</span>`).join('')}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function renderSleek(container, data) {
+    container.className = 'template-sleek';
+    container.innerHTML = `
+        <div class="sleek-header">
+            <div>
+                <h2>${data.name}</h2>
+                <div style="font-size: 1.1rem; color: var(--secondary-color); font-weight: 500;">${data.title}</div>
+            </div>
+            <div class="sleek-contact">
+                <div>${data.email}</div>
+                <div>${data.phone}</div>
+                <div>${data.location}</div>
+            </div>
+        </div>
+
+        <div class="sleek-section">
+            <div class="sleek-section-title">Summary</div>
+            <p style="font-size: 0.95rem;">${data.summary}</p>
+        </div>
+
+        <div class="sleek-section">
+            <div class="sleek-section-title">Experience</div>
+            ${data.experience.map(exp => `
+                <div class="sleek-item">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                        <h4 style="margin: 0; font-size: 1.05rem;">${exp.role}</h4>
+                        <span style="font-size: 0.85rem; color: var(--primary-color); font-weight: 600;">${exp.duration}</span>
+                    </div>
+                    <div style="color: var(--secondary-color); font-weight: 500; font-size: 0.95rem; margin-bottom: 0.5rem;">${exp.company}</div>
+                    <p style="font-size: 0.9rem; color: #475569;">${exp.description}</p>
+                </div>
+            `).join('')}
+        </div>
+
+        <div class="sleek-section">
+            <div class="sleek-section-title">Education</div>
+            ${data.education.map(edu => `
+                <div class="sleek-item" style="margin-bottom: 0.75rem;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="font-weight: 600;">${edu.degree}</span>
+                        <span style="font-size: 0.85rem;">${edu.duration}</span>
+                    </div>
+                    <div style="font-size: 0.9rem;">${edu.school}</div>
+                </div>
+            `).join('')}
+        </div>
+
+        <div class="sleek-section">
+            <div class="sleek-section-title">Skills & Technologies</div>
+            <div class="sleek-grid">
+                ${data.skills.map(s => `<div class="sleek-skill">${s}</div>`).join('')}
+            </div>
+        </div>
+    `;
+}
+
+function renderMinimalist(container, data) {
+    container.className = 'template-minimalist';
+    container.innerHTML = `
+        <div class="minimalist-header">
+            <h2>${data.name}</h2>
+            <div class="contact">
+                ${data.email} | ${data.phone} | ${data.location}
+            </div>
+            <div style="margin-top: 1rem; font-weight: 600; color: #444;">${data.title}</div>
+        </div>
+
+        <div class="minimalist-section">
+            <div class="minimalist-section-title">Summary</div>
+            <p style="text-align: center; max-width: 80%; margin: 0 auto; line-height: 1.8;">${data.summary}</p>
+        </div>
+
+        <div class="minimalist-section">
+            <div class="minimalist-section-title">Experience</div>
+            ${data.experience.map(exp => `
+                <div class="minimalist-item">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                        <h4>${exp.role}</h4>
+                        <span style="font-size: 0.85rem; color: #999;">${exp.duration}</span>
+                    </div>
+                    <div class="sub">${exp.company}</div>
+                    <p style="font-size: 0.9rem; line-height: 1.6;">${exp.description}</p>
+                </div>
+            `).join('')}
+        </div>
+
+        <div class="minimalist-section">
+            <div class="minimalist-section-title">Education</div>
+            ${data.education.map(edu => `
+                <div class="minimalist-item">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                        <h4>${edu.degree}</h4>
+                        <span style="font-size: 0.85rem; color: #999;">${edu.duration}</span>
+                    </div>
+                    <div class="sub">${edu.school}</div>
+                </div>
+            `).join('')}
+        </div>
+
+        <div class="minimalist-section">
+            <div class="minimalist-section-title">Skills</div>
+            <div class="minimalist-skills">
+                ${data.skills.map(s => `<span>${s}</span>`).join('')}
+            </div>
         </div>
     `;
 }
