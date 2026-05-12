@@ -25,6 +25,46 @@ body {
     color: var(--text-main);
     line-height: 1.6;
     min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.bg-shapes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.shape {
+    position: absolute;
+    filter: blur(80px);
+    border-radius: 50%;
+    animation: float 20s infinite alternate ease-in-out;
+}
+
+.shape-1 {
+    width: 400px;
+    height: 400px;
+    background: rgba(0, 86, 179, 0.1);
+    top: -100px;
+    left: -100px;
+}
+
+.shape-2 {
+    width: 500px;
+    height: 500px;
+    background: rgba(230, 240, 255, 0.5);
+    bottom: -150px;
+    right: -150px;
+    animation-delay: -5s;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(100px, 50px) rotate(15deg); }
 }
 
 ::-webkit-scrollbar {
@@ -232,24 +272,29 @@ input:focus, textarea:focus {
 }
 
 .resume-container {
-    background: #cbd5e1;
+    background: transparent;
     flex-grow: 1;
     border-radius: var(--radius);
-    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
     overflow: auto;
-    padding: 2rem;
+    padding: 4rem 2rem;
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    perspective: 1500px;
 }
 
 #resume-preview {
     width: 210mm;
     min-height: 297mm;
     background: white;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-    transform-origin: top center;
-    transition: transform 0.3s ease;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+    transform-origin: center center;
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s ease;
+}
+
+#resume-preview:hover {
+    transform: rotateX(2deg) rotateY(-2deg) scale(1.02);
+    box-shadow: 0 50px 100px rgba(0, 0, 0, 0.2);
 }
 
 /* Template 1: Plane */
